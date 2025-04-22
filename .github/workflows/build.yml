@@ -3,10 +3,10 @@ name: Build and Sign .exe
 on:
   push:
     branches:
-      - main  # 当推送到 main 分支时触发构建
+      - main  # 当推送到 main 分支时触发
   pull_request:
     branches:
-      - main  # 当有 PR 请求合并到 main 分支时触发构建
+      - main  # 当有 PR 请求合并到 main 分支时触发
 
 jobs:
   build:
@@ -16,10 +16,10 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2  # 检出代码
 
-    - name: Set up Python
+    - name: Set up Python 3.11
       uses: actions/setup-python@v2
       with:
-        python-version: '3.x'
+        python-version: '3.11'  # 设置 Python 3.11 版本
 
     - name: Install dependencies
       run: |
