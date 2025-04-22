@@ -3,28 +3,28 @@ name: Build and Sign .exe
 on:
   push:
     branches:
-      - main   # 当推送到 main 分支时触发构建
+      - main  # 当推送到 main 分支时触发构建
+  pull_request:
+    branches:
+      - main  # 当有 PR 请求合并到 main 分支时触发构建
 
 jobs:
   build:
-    runs-on: windows-latest   # 使用 Windows 环境来打包 .exe 文件
+    runs-on: windows-latest  # 使用 Windows 环境
 
     steps:
-    - name: Checkout the code
-      uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2  # 检出代码
 
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.x'  # 选择你的 Python 版本
+        python-version: '3.x'
 
     - name: Install dependencies
       run: |
         pip install pyinstaller
-        pip install -r requirements.txt  # 如果你有依赖文件，使用此命令安装
-
-    - name: Install OpenSSL (for signing)
-      run: choco install openssl
+        pip install -r requirements.txt  # 安装项目依赖
 
     - name: Build .exe with PyInstaller
       run: pyinstaller --onefile --add-data "alarm.png;." --add-data "clock_icon.png;." --add-data "reminder.wav;." --add-data "alarms.db;." alarm_app.py
@@ -33,9 +33,3 @@ jobs:
       run: |
         echo "$CODE_SIGNING_CERTIFICATE" | base64 -d > my_certificate.pfx  # 解码证书
         signtool sign /f my_certificate.pfx /p "$CODE_SIGNING_PASSWORD" dist/alarm_app.exe  # 使用证书签名
-
-    - name: Upload signed .exe as artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: alarm_app_signed.exe
-        path: dist/alarm_app.exe
