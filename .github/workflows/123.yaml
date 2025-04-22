@@ -32,3 +32,10 @@ jobs:
 
     - name: Build .exe with PyInstaller
       run: pyinstaller --onefile --add-data "alarm.png;." --add-data "clock_icon.png;." --add-data "reminder.wav;." --add-data "alarms.db;." alarm_app.py
+
+    - name: Upload .exe to GitHub Releases
+      uses: softprops/action-gh-release@v1
+      with:
+        files: dist/alarm_app.exe
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
