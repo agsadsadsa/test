@@ -42,15 +42,8 @@ jobs:
     - name: Sign the .exe file
       run: signtool sign /f my_certificate.pfx /p "$CODE_SIGNING_PASSWORD" dist/alarm_app.exe
 
-    - name: Create a new tag
-      run: |
-        VERSION=$(date +%Y%m%d%H%M%S)  # Optional: Create a version based on timestamp or something else
-        git tag "v$VERSION"
-        git push origin "v$VERSION"
-
-    - name: Upload .exe to GitHub Releases
-      uses: softprops/action-gh-release@v1
+    - name: Upload .exe to GitHub Actions Artifacts
+      uses: actions/upload-artifact@v3
       with:
-        files: dist/alarm_app.exe
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        name: alarm-app-exe
+        path: dist/alarm_app.exe
