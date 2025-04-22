@@ -21,9 +21,9 @@ jobs:
       with:
         python-version: '3.11'
 
-    - name: Upgrade pip and wheel
+    - name: Upgrade pip, setuptools, and wheel
       run: |
-        python -m pip install --upgrade pip wheel
+        python -m pip install --upgrade pip setuptools wheel
 
     - name: Install dependencies
       run: |
@@ -33,6 +33,14 @@ jobs:
     - name: Build .exe with PyInstaller
       run: pyinstaller --onefile --add-data "alarm.png;." --add-data "clock_icon.png;." --add-data "reminder.wav;." --add-data "alarms.db;." alarm_app.py
 
+    # Optional: Upload .exe as artifact (if you want to download manually later)
+    - name: Upload .exe as artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: alarm_app
+        path: dist/alarm_app.exe
+
+    # Upload .exe to GitHub Releases (if you want automated release uploads)
     - name: Upload .exe to GitHub Releases
       uses: softprops/action-gh-release@v1
       with:
