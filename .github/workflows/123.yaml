@@ -34,7 +34,7 @@ jobs:
       run: pyinstaller --onefile --add-data "alarm.png;." --add-data "clock_icon.png;." --add-data "reminder.wav;." --add-data "alarms.db;." alarm_app.py
 
     - name: Upload .exe as artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v2.3.1  # 尝试指定明确版本
       with:
         name: alarm_app
         path: dist/alarm_app.exe
