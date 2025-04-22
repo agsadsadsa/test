@@ -41,3 +41,11 @@ jobs:
 
     - name: Sign the .exe file
       run: signtool sign /f my_certificate.pfx /p "$CODE_SIGNING_PASSWORD" dist/alarm_app.exe
+
+    # New step to upload the .exe file to GitHub Releases
+    - name: Upload .exe to GitHub Releases
+      uses: softprops/action-gh-release@v1
+      with:
+        files: dist/alarm_app.exe
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
