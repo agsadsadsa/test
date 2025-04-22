@@ -1,39 +1,41 @@
-name: Build and Sign .exe
+name: Build and Sign .exe File
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
     branches:
       - main
 
 jobs:
   build:
     runs-on: windows-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Set up Python 3.11
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.11'
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.11
 
-    - name: Upgrade pip, setuptools, and wheel
-      run: |
-        python -m pip install --upgrade pip setuptools wheel
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller
 
-    - name: Install dependencies
-      run: |
-        pip install pyinstaller
-        pip install -r requirements.txt
+      - name: Build .exe with PyInstaller
+        run: |
+          pyinstaller --onefile your_script.py
 
-    - name: Build .exe with PyInstaller
-      run: pyinstaller --onefile --add-data "alarm.png;." --add-data "clock_icon.png;." --add-data "reminder.wav;." --add-data "alarms.db;." alarm_app.py
+      - name: Prepare signing certificate
+        run: |
+          echo "$SIGNING_CERTIFICATE" | base64 -d > my_certificate.pfx
 
-    - name: Sign the .exe file
-      run: |
-        echo "$CODE_SIGNING_CERTIFICATE" | base64 -d > my_certificate.pfx
-        signtool sign /f my_certificate.pfx /p "$CODE_SIGNING_PASSWORD" dist/alarm_app.exe
+      - name: Sign .exe file
+        run: |
+          signtool sign /f my_certificate.pfx /p "$SIGNING_PASSWORD" dist/your_script.exe
+
+      - name: Upload signed .exe as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: signed-exe
+          path: dist/your_script.exe
