@@ -32,7 +32,7 @@ jobs:
 
       - name: Sign .exe file
         run: |
-          signtool sign /f my_certificate.pfx /p "$SIGNING_PASSWORD" dist/your_script.exe
+          signtool sign /f  my_certificate.pfx /p "$SIGNING_PASSWORD" dist/your_script.exe
 
       - name: Upload signed .exe as artifact
         uses: actions/upload-artifact@v2
